@@ -25,7 +25,7 @@ The base SeekBar is pretty simple. Just 3 drawables for the track, progress and 
 
 It supports custom ranges (custom min/max), even for negative values.
 
-The bubble thing **DOESN'T USE** [VectorDrawableMagic] (was not needed for such a simple morph).It uses instead an [Animatable Drawable] for the animation with a lot of hackery for callbacks, drawing and a bunch of old simple math.
+The bubble thing **DOESN'T USE** [VectorDrawableMagic] . I was not really needed for such a simple morph. It uses instead an [Animatable Drawable] for the animation with a lot of hackery for callbacks, drawing and a bunch of old simple math.
 
 >For this to work (and sync with events, etc) I've written a fair amount of shit questionable code...
 
@@ -34,10 +34,10 @@ The material-floating-thing is composed into the WindowManager (like the typical
 >For this I'm not sure about the amounts of things I've copied from [PopupWindow] and the possible issues.
 
 ##Dependencies
-It uses **com.android.support:support-v4** as yhe only dependency.
+It uses **com.android.support:support-v4** as the only dependency.
 
 ##Usage
->I'd like to publish it to jcenter so developers can easily add it to gradle, but I'd need some help/instructions on doing it.
+>I'd like to publish it to **jcenter* so developers can easily add it to gradle, but I'd need some help/instructions on doing it.
 
 Once imported into your project, you just need to put them into your layous like:
 ```xml
@@ -57,7 +57,9 @@ You can tweak a few things of the DiscreteSeekbar:
 * **dsb_value**: current value
 * **dsb_mirrorForRtl**: reverse the DiscreteSeekBar for RTL locales
 * **dsb_indicatorFormatter**: a string [Format] to apply to the value inside the bubble indicator.
-####Design 
+
+####Design
+ 
 * **dsb_progressColor**: color/colorStateList for the progress bar and thumb drawable
 * **dsb_trackColor**: color/colorStateList for the track drawable
 * **dsb_indicatorTextAppearance**: TextAppearance for the bubble indicator
