@@ -1,0 +1,51 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:paddingLeft="@dimen/activity_horizontal_margin"
+              android:paddingRight="@dimen/activity_horizontal_margin"
+              android:paddingTop="@dimen/activity_vertical_margin"
+              android:paddingBottom="@dimen/activity_vertical_margin"
+              android:orientation="vertical"
+              tools:context=".MainActivity"
+
+    >
+
+    <TextView
+        android:textDirection="locale"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/app_name"/>
+    <SeekBar
+        style="?android:attr/seekBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:max="10"/>
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/discrete1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:min="-5"
+        app:max="5"
+        />
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/discrete2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:indicatorTextAppearance="@style/CustomFloaterTextAppearance"
+        app:progressColor="@color/my_progress_color"
+        app:rippleColor="#FF7788FF"
+        app:indicatorColor="@color/my_floater_color"
+        app:indicatorFormatter="\\o/ %d"/>
+
+    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+        android:id="@+id/discrete3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:min="1"
+        app:max="1000"
+        app:indicatorFormatter="%04d"/>
+
+</LinearLayout>
