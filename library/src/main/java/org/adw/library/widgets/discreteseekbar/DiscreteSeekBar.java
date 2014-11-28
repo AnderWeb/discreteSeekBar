@@ -156,39 +156,46 @@ public class DiscreteSeekBar extends View {
 
         int max = 100;
         int min = 0;
+        int value = 0;
+        mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
 
-        mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_mirrorForRtl, mMirrorForRtl);
-
-        int indexMax = R.styleable.DiscreteSeekBar_max;
-        int indexMin = R.styleable.DiscreteSeekBar_min;
-        final TypedValue minTypedValue = new TypedValue();
-        final TypedValue maxTypedValue = new TypedValue();
+        int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
+        int indexMin = R.styleable.DiscreteSeekBar_dsb_min;
+        int indexValue = R.styleable.DiscreteSeekBar_dsb_value;
+        final TypedValue out = new TypedValue();
         //Not sure why, but we wanted to be able to use dimensions here...
-        if (a.getValue(indexMax, maxTypedValue)) {
-            if (maxTypedValue.type == TypedValue.TYPE_DIMENSION) {
-                max = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_max, max);
+        if (a.getValue(indexMax, out)) {
+            if (out.type == TypedValue.TYPE_DIMENSION) {
+                max = a.getDimensionPixelSize(indexMax, max);
             } else {
-                max = a.getInteger(R.styleable.DiscreteSeekBar_max, max);
+                max = a.getInteger(indexMax, max);
             }
         }
-        if (a.getValue(indexMin, minTypedValue)) {
-            if (minTypedValue.type == TypedValue.TYPE_DIMENSION) {
-                min = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_min, min);
+        if (a.getValue(indexMin, out)) {
+            if (out.type == TypedValue.TYPE_DIMENSION) {
+                min = a.getDimensionPixelSize(indexMin, min);
             } else {
-                min = a.getInteger(R.styleable.DiscreteSeekBar_min, min);
+                min = a.getInteger(indexMin, min);
+            }
+        }
+        if (a.getValue(indexValue, out)) {
+            if (out.type == TypedValue.TYPE_DIMENSION) {
+                value = a.getDimensionPixelSize(indexValue, value);
+            } else {
+                value = a.getInteger(indexValue, value);
             }
         }
 
         mMin = min;
-        mMax = max;
-        mValue = min;
+        mMax = Math.max(min + 1, max);
+        mValue = Math.max(min, Math.min(max, value));
         updateKeyboardRange();
 
-        mIndicatorFormatter = a.getString(R.styleable.DiscreteSeekBar_indicatorFormatter);
+        mIndicatorFormatter = a.getString(R.styleable.DiscreteSeekBar_dsb_indicatorFormatter);
 
-        ColorStateList trackColor = a.getColorStateList(R.styleable.DiscreteSeekBar_trackColor);
-        ColorStateList progressColor = a.getColorStateList(R.styleable.DiscreteSeekBar_progressColor);
-        ColorStateList rippleColor = a.getColorStateList(R.styleable.DiscreteSeekBar_rippleColor);
+        ColorStateList trackColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_trackColor);
+        ColorStateList progressColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_progressColor);
+        ColorStateList rippleColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_rippleColor);
         mRipple = SeekBarCompat.getRipple(rippleColor);
         if (isLollipopOrGreater) {
             SeekBarCompat.setBackground(this, mRipple);

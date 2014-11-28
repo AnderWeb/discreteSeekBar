@@ -78,7 +78,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
                 R.attr.discreteSeekBarStyle, R.style.DefaultSeekBar);
 
         int padding = (int) (PADDING_DP * displayMetrics.density) * 2;
-        int textAppearanceId = a.getResourceId(R.styleable.DiscreteSeekBar_indicatorTextAppearance,
+        int textAppearanceId = a.getResourceId(R.styleable.DiscreteSeekBar_dsb_indicatorTextAppearance,
                 R.style.DefaultIndicatorTextAppearance);
         mNumber = new TextView(context);
         //Add some padding to this textView so the bubble has some space to breath
@@ -99,14 +99,14 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
         mSeparation = (int) (SEPARATION_DP * displayMetrics.density);
         int thumbSize = (int) (ThumbDrawable.DEFAULT_SIZE_DP * displayMetrics.density);
-        ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_indicatorColor);
+        ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indicatorColor);
         mMarkerDrawable = new MarkerDrawable(color, thumbSize);
         mMarkerDrawable.setCallback(this);
         mMarkerDrawable.setMarkerListener(this);
         mMarkerDrawable.setExternalOffset(padding);
 
         //Elevation for anroid 5+
-        float elevation = a.getDimension(R.styleable.DiscreteSeekBar_indicatorElevation, ELEVATION_DP * displayMetrics.density);
+        float elevation = a.getDimension(R.styleable.DiscreteSeekBar_dsb_indicatorElevation, ELEVATION_DP * displayMetrics.density);
         ViewCompat.setElevation(this, elevation);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             SeekBarCompat.setOutlineProvider(this, mMarkerDrawable);

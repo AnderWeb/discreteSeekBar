@@ -19,15 +19,16 @@
     <!-- DiscreteSeekBar specific attributes -->
     <attr name="discreteSeekBarStyle" format="reference"/>
     <declare-styleable name="DiscreteSeekBar">
-        <attr name="min" format="integer|dimension"/>
-        <attr name="max" format="integer|dimension"/>
-        <attr name="mirrorForRtl" format="boolean"/>
-        <attr name="progressColor" format="color|reference"/>
-        <attr name="trackColor" format="color|reference"/>
-        <attr name="indicatorTextAppearance" format="reference"/>
-        <attr name="indicatorColor" format="color|reference"/>
-        <attr name="indicatorElevation" format="dimension"/>
-        <attr name="indicatorFormatter" format="string|reference"/>
-        <attr name="rippleColor" format="color|reference"/>
+        <attr name="dsb_min" format="integer|dimension"/>
+        <attr name="dsb_max" format="integer|dimension"/>
+        <attr name="dsb_value" format="integer|dimension"/>
+        <attr name="dsb_mirrorForRtl" format="boolean"/>
+        <attr name="dsb_progressColor" format="color|reference"/>
+        <attr name="dsb_trackColor" format="color|reference"/>
+        <attr name="dsb_indicatorTextAppearance" format="reference"/>
+        <attr name="dsb_indicatorColor" format="color|reference"/>
+        <attr name="dsb_indicatorElevation" format="dimension"/>
+        <attr name="dsb_indicatorFormatter" format="string|reference"/>
+        <attr name="dsb_rippleColor" format="color|reference"/>
     </declare-styleable>
 </resources>

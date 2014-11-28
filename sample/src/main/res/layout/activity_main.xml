@@ -17,35 +17,32 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"/>
-    <SeekBar
-        style="?android:attr/seekBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="10"/>
+
     <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/discrete1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:min="-5"
-        app:max="5"
+        app:dsb_min="-5"
+        app:dsb_max="5"
+        app:dsb_value="-2"
         />
 
     <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/discrete2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:indicatorTextAppearance="@style/CustomFloaterTextAppearance"
-        app:progressColor="@color/my_progress_color"
-        app:rippleColor="#FF7788FF"
-        app:indicatorColor="@color/my_floater_color"
-        app:indicatorFormatter="\\o/ %d"/>
+        app:dsb_indicatorTextAppearance="@style/CustomFloaterTextAppearance"
+        app:dsb_progressColor="@color/my_progress_color"
+        app:dsb_rippleColor="#FF7788FF"
+        app:dsb_indicatorColor="@color/my_floater_color"
+        app:dsb_indicatorFormatter="\\o/ %d"/>
 
     <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:id="@+id/discrete3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:min="1"
-        app:max="1000"
-        app:indicatorFormatter="%04d"/>
+        app:dsb_min="1"
+        app:dsb_max="1000"
+        app:dsb_indicatorFormatter="%04d"/>
 
 </LinearLayout>
