@@ -22,7 +22,9 @@ import android.graphics.Outline;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.RippleDrawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
@@ -54,5 +56,15 @@ class SeekBarCompatDontCrash {
 
     public static void setTextDirection(TextView number, int textDirection) {
         number.setTextDirection(textDirection);
+    }
+
+    public static boolean isInScrollingContainer(ViewParent p) {
+        while (p != null && p instanceof ViewGroup) {
+            if (((ViewGroup) p).shouldDelayChildPressedState()) {
+                return true;
+            }
+            p = p.getParent();
+        }
+        return false;
     }
 }

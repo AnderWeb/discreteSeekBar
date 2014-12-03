@@ -56,6 +56,7 @@ You can tweak a few things of the DiscreteSeekbar:
 * **dsb_max**: maximum value
 * **dsb_value**: current value
 * **dsb_mirrorForRtl**: reverse the DiscreteSeekBar for RTL locales
+* **dsb_allowTrackClickToDrag**: allows clicking outside the thumb circle to initiate drag. Default TRUE
 * **dsb_indicatorFormatter**: a string [Format] to apply to the value inside the bubble indicator.
 
 ####Design

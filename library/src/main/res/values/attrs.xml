@@ -23,6 +23,7 @@
         <attr name="dsb_max" format="integer|dimension"/>
         <attr name="dsb_value" format="integer|dimension"/>
         <attr name="dsb_mirrorForRtl" format="boolean"/>
+        <attr name="dsb_allowTrackClickToDrag" format="boolean"/>
         <attr name="dsb_progressColor" format="color|reference"/>
         <attr name="dsb_trackColor" format="color|reference"/>
         <attr name="dsb_indicatorTextAppearance" format="reference"/>

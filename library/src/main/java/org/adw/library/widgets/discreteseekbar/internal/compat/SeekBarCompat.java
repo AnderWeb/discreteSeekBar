@@ -21,6 +21,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
+import android.view.ViewParent;
 import android.widget.TextView;
 
 import org.adw.library.widgets.discreteseekbar.internal.drawable.AlmostRippleDrawable;
@@ -109,5 +110,12 @@ public class SeekBarCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             SeekBarCompatDontCrash.setTextDirection(textView, textDirection);
         }
+    }
+
+    public static boolean isInScrollingContainer(ViewParent p) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+            return SeekBarCompatDontCrash.isInScrollingContainer(p);
+        }
+        return false;
     }
 }

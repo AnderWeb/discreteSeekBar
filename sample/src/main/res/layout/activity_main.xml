@@ -31,18 +31,35 @@
         android:id="@+id/discrete2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:dsb_allowTrackClickToDrag="false"
         app:dsb_indicatorTextAppearance="@style/CustomFloaterTextAppearance"
         app:dsb_progressColor="@color/my_progress_color"
         app:dsb_rippleColor="#FF7788FF"
         app:dsb_indicatorColor="@color/my_floater_color"
         app:dsb_indicatorFormatter="\\o/ %d"/>
 
-    <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
-        android:id="@+id/discrete3"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:dsb_min="1"
-        app:dsb_max="1000"
-        app:dsb_indicatorFormatter="%04d"/>
-
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lorem_ipsum"/>
+            <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
+                android:id="@+id/discrete3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:dsb_min="1"
+                app:dsb_max="1000"
+                app:dsb_indicatorFormatter="%04d"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/lorem_ipsum_2"/>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

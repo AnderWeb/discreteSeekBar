@@ -34,6 +34,7 @@ import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.view.ViewParent;
 
 import org.adw.library.widgets.discreteseekbar.internal.PopupIndicator;
@@ -99,6 +100,7 @@ public class DiscreteSeekBar extends View {
     private static final int PRESSED_STATE = android.R.attr.state_pressed;
     private static final int FOCUSED_STATE = android.R.attr.state_focused;
     private static final int PROGRESS_ANIMATION_DURATION = 250;
+    private static final int INDICATOR_DELAY_FOR_TAPS = 150;
     private ThumbDrawable mThumb;
     private Drawable mTrack;
     private Drawable mScrubber;
@@ -113,6 +115,7 @@ public class DiscreteSeekBar extends View {
     private int mValue;
     private int mKeyProgressIncrement = 1;
     private boolean mMirrorForRtl = false;
+    private boolean mAllowTrackClick = true;
     //We use our own Formatter to avoid creating new instances on every progress change
     Formatter mFormatter;
     private String mIndicatorFormatter;
@@ -127,6 +130,8 @@ public class DiscreteSeekBar extends View {
     private AnimatorCompat mPositionAnimator;
     private float mAnimationPosition;
     private int mAnimationTarget;
+    private float mDownX;
+    private float mTouchSlop;
 
     public DiscreteSeekBar(Context context) {
         this(context, null);
@@ -141,6 +146,7 @@ public class DiscreteSeekBar extends View {
         setFocusable(true);
         setWillNotDraw(false);
 
+        mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         float density = context.getResources().getDisplayMetrics().density;
         mTrackHeight = (int) (1 * density);
         mScrubberHeight = (int) (4 * density);
@@ -158,6 +164,7 @@ public class DiscreteSeekBar extends View {
         int min = 0;
         int value = 0;
         mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
+        mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
 
         int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
         int indexMin = R.styleable.DiscreteSeekBar_dsb_min;
@@ -433,6 +440,7 @@ public class DiscreteSeekBar extends View {
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         super.onLayout(changed, left, top, right, bottom);
         if (changed) {
+            removeCallbacks(mShowIndicatorRunnable);
             mIndicator.dismissComplete();
             updateFromDrawableState();
         }
@@ -494,8 +502,10 @@ public class DiscreteSeekBar extends View {
             }
         }
         if (isEnabled() && (focused || pressed)) {
-            showFloater();
-            mThumb.animateToPressed();
+            //We want to add a small delay here to avoid
+            //poping in/out on simple taps
+            removeCallbacks(mShowIndicatorRunnable);
+            postDelayed(mShowIndicatorRunnable, INDICATOR_DELAY_FOR_TAPS);
         } else {
             hideFloater();
         }
@@ -526,29 +536,47 @@ public class DiscreteSeekBar extends View {
         int actionMasked = MotionEventCompat.getActionMasked(event);
         switch (actionMasked) {
             case MotionEvent.ACTION_DOWN:
-                if (startDragging(event)) {
-                    return true;
-                }
+                mDownX = event.getX();
+                startDragging(event, isInScrollingContainer());
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (isDragging()) {
                     updateDragging(event);
+                } else {
+                    final float x = event.getX();
+                    if (Math.abs(x - mDownX) > mTouchSlop) {
+                        startDragging(event, false);
+                    }
                 }
-                return true;
+                break;
             case MotionEvent.ACTION_UP:
             case MotionEvent.ACTION_CANCEL:
                 stopDragging();
                 break;
         }
-        return isDragging() || super.onTouchEvent(event);
+        return true;
     }
 
-    private boolean startDragging(MotionEvent ev) {
+    private boolean isInScrollingContainer() {
+        return SeekBarCompat.isInScrollingContainer(getParent());
+    }
+
+    private boolean startDragging(MotionEvent ev, boolean ignoreTrackIfInScrollContainer) {
         final Rect bounds = mTempRect;
         mThumb.copyBounds(bounds);
         //Grow the current thumb rect for a bigger touch area
         bounds.inset(-mAddedTouchBounds, -mAddedTouchBounds);
         mIsDragging = (bounds.contains((int) ev.getX(), (int) ev.getY()));
+        if (!mIsDragging && mAllowTrackClick && !ignoreTrackIfInScrollContainer) {
+            //If the user clicked outside the thumb, we compute the current position
+            //and force an immediate drag to it.
+            mIsDragging = true;
+            mDraggOffset = (bounds.width() / 2) - mAddedTouchBounds;
+            updateDragging(ev);
+            //As the thumb may have moved, get the bounds again
+            mThumb.copyBounds(bounds);
+            bounds.inset(-mAddedTouchBounds, -mAddedTouchBounds);
+        }
         if (mIsDragging) {
             setPressed(true);
             attemptClaimDrag();
@@ -747,12 +775,21 @@ public class DiscreteSeekBar extends View {
         }
     }
 
+    private Runnable mShowIndicatorRunnable = new Runnable() {
+        @Override
+        public void run() {
+            showFloater();
+        }
+    };
+
     private void showFloater() {
+        mThumb.animateToPressed();
         mIndicator.showIndicator(this, mThumb.getBounds());
         notifyBubble(true);
     }
 
     private void hideFloater() {
+        removeCallbacks(mShowIndicatorRunnable);
         mIndicator.dismiss();
         notifyBubble(false);
     }
@@ -773,6 +810,7 @@ public class DiscreteSeekBar extends View {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        removeCallbacks(mShowIndicatorRunnable);
         mIndicator.dismissComplete();
     }
 
