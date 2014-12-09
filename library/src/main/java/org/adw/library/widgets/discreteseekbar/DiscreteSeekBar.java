@@ -85,7 +85,7 @@ public class DiscreteSeekBar extends View {
         public int transform(int value);
     }
 
-    private static class DefaulNumericTransformer implements NumericTransformer {
+    private static class DefaultNumericTransformer implements NumericTransformer {
 
         @Override
         public int transform(int value) {
@@ -243,7 +243,7 @@ public class DiscreteSeekBar extends View {
         }
         a.recycle();
 
-        setNumericTransformer(new DefaulNumericTransformer());
+        setNumericTransformer(new DefaultNumericTransformer());
 
     }
 
@@ -266,7 +266,7 @@ public class DiscreteSeekBar extends View {
      * @see #getNumericTransformer()
      */
     public void setNumericTransformer(@Nullable NumericTransformer transformer) {
-        mNumericTransformer = transformer != null ? transformer : new DefaulNumericTransformer();
+        mNumericTransformer = transformer != null ? transformer : new DefaultNumericTransformer();
         //We need to refresh the PopupIndivator view
         if (!isInEditMode()) {
             mIndicator.updateSizes(convertValueToMessage(mNumericTransformer.transform(mMax)));
