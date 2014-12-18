@@ -360,8 +360,8 @@ public class DiscreteSeekBar extends View {
         }
 
         if (mValue != value) {
-            notifyProgress(value, fromUser);
             mValue = value;
+            notifyProgress(value, fromUser);
             updateProgressMessage(value);
             updateThumbPosFromCurrentProgress();
         }
