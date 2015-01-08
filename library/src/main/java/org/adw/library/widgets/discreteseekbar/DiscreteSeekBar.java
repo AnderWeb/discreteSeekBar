@@ -82,32 +82,40 @@ public class DiscreteSeekBar extends View {
          * @param value
          * @return
          */
-        public int transform(int value);
-    }
+        public int transformToInt(int value);
 
-    /**
-     * Interface to transform the current internal value of this DiscreteSeekBar to anther one for the visualization.
-     * <p/>
-     * This will be used on the floating bubble to display a different value if needed.
-     * <p/>
-     *
-     * @see #setNumericTransformer(DiscreteSeekBar.NumericTransformer)
-     */
-    public interface NumericStringTransformer {
         /**
          * Return the desired value to be shown to the user.
          *
          * @param value The value to be transformed
          * @return A formatted string
          */
-        public String transform(int value);
+        public String transformToString(int value);
+
+        /**
+         * Used to indicate which transform will be used. If this method returns true,
+         * {@link #transformToString(int)} will be used, otherwise {@link #transformToInt(int)}
+         * will be used
+         */
+        public boolean useStringTransform();
     }
+
 
     private static class DefaultNumericTransformer implements NumericTransformer {
 
         @Override
-        public int transform(int value) {
+        public int transformToInt(int value) {
             return value;
+        }
+
+        @Override
+        public String transformToString(int value) {
+            return null;
+        }
+
+        @Override
+        public boolean useStringTransform() {
+            return false;
         }
     }
 
@@ -140,7 +148,6 @@ public class DiscreteSeekBar extends View {
     Formatter mFormatter;
     private String mIndicatorFormatter;
     private NumericTransformer mNumericTransformer;
-    private NumericStringTransformer mNumericStringTransformer;
     private OnProgressChangeListener mPublicChangeListener;
     private boolean mIsDragging;
     private int mDragOffset;
@@ -287,9 +294,13 @@ public class DiscreteSeekBar extends View {
      */
     public void setNumericTransformer(@Nullable NumericTransformer transformer) {
         mNumericTransformer = transformer != null ? transformer : new DefaultNumericTransformer();
-        //We need to refresh the PopupIndivator view
+        //We need to refresh the PopupIndicator view
         if (!isInEditMode()) {
-            mIndicator.updateSizes(convertValueToMessage(mNumericTransformer.transform(mMax)));
+            if (mNumericTransformer.useStringTransform()) {
+                mIndicator.updateSizes(mNumericTransformer.transformToString(mMax));
+            } else {
+                mIndicator.updateSizes(convertValueToMessage(mNumericTransformer.transformToInt(mMax)));
+            }
         }
         updateProgressMessage(mValue);
     }
@@ -302,33 +313,6 @@ public class DiscreteSeekBar extends View {
      */
     public NumericTransformer getNumericTransformer() {
         return mNumericTransformer;
-    }
-
-    /**
-     * Sets the current {@link DiscreteSeekBar.NumericStringTransformer}
-     * If this value is set to a non null value, the seekbar will prefer to use this over the
-     * current {@link DiscreteSeekBar.NumericTransformer}
-     *
-     * @param transformer
-     * @see #getNumericStringTransformer()
-     */
-    public void setNumericStringTransformer(NumericStringTransformer transformer) {
-        mNumericStringTransformer = transformer;
-        //We need to refresh the PopupIndivator view
-        if (!isInEditMode()) {
-            mIndicator.updateSizes(mNumericStringTransformer.transform(mMax));
-        }
-        updateProgressMessage(mValue);
-    }
-
-    /**
-     * Retrieves the current {@link DiscreteSeekBar.NumericStringTransformer}
-     *
-     * @return NumericStringTransformer
-     * @see #setNumericStringTransformer
-     */
-    public NumericStringTransformer getNumericStringTransformer() {
-        return mNumericStringTransformer;
     }
 
     /**
@@ -602,12 +586,12 @@ public class DiscreteSeekBar extends View {
 
     private void updateProgressMessage(int value) {
         if (!isInEditMode()) {
-            if (mNumericStringTransformer != null) {
-                mIndicator.setValue(mNumericStringTransformer.transform(value));
+            if (mNumericTransformer.useStringTransform()) {
+                mIndicator.setValue(mNumericTransformer.transformToString(value));
                 return;
             }
 
-            mIndicator.setValue(convertValueToMessage(mNumericTransformer.transform(value)));
+            mIndicator.setValue(convertValueToMessage(mNumericTransformer.transformToInt(value)));
         }
     }
 
