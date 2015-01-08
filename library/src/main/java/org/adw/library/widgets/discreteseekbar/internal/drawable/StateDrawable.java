@@ -34,7 +34,7 @@ import android.support.annotation.NonNull;
  * @hide
  */
 public abstract class StateDrawable extends Drawable {
-    private final ColorStateList mTintStateList;
+    private ColorStateList mTintStateList;
     private final Paint mPaint;
     private int mCurrentColor;
     private int mAlpha = 255;
@@ -80,6 +80,10 @@ public abstract class StateDrawable extends Drawable {
         int alpha = modulateAlpha(Color.alpha(mCurrentColor));
         mPaint.setAlpha(alpha);
         doDraw(canvas, mPaint);
+    }
+
+    public void setColorStateList(@NonNull ColorStateList tintStateList) {
+        mTintStateList = tintStateList;
     }
 
     /**

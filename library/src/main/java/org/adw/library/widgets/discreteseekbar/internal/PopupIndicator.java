@@ -121,6 +121,9 @@ public class PopupIndicator {
         translateViewIntoPosition(x);
     }
 
+    public void setColors(int startColor, int endColor) {
+        mPopupView.setColors(startColor, endColor);
+    }
 
     /**
      * This will start the closing animation of the Marker and call onClosingComplete when finished
@@ -199,10 +202,6 @@ public class PopupIndicator {
         return curFlags;
     }
 
-    public void setColor(int color) {
-        mPopupView.setColor(color);
-    }
-
     /**
      * Small FrameLayout class to hold and move the bubble around when requested
      * I wanted to use the {@link Marker} directly
@@ -261,8 +260,8 @@ public class PopupIndicator {
             }
         }
 
-        public void setColor(int color) {
-            mMarker.setColor(color);
+        public void setColors(int startColor, int endColor) {
+            mMarker.setColors(startColor, endColor);
         }
     }
 

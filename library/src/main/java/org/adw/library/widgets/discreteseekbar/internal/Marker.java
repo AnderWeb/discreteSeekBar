@@ -50,7 +50,6 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
     private static final int PADDING_DP = 4;
     private static final int ELEVATION_DP = 8;
     private static final int SEPARATION_DP = 30;
-    private final int PADDING_PX;
     //The TextView to show the info
     private TextView mNumber;
     //The max width of this View
@@ -58,7 +57,6 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
     //some distance between the thumb and our bubble marker.
     //This will be added to our measured height
     private int mSeparation;
-    private int mThumbSize;
     MarkerDrawable mMarkerDrawable;
 
     public Marker(Context context) {
@@ -79,12 +77,12 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
                 R.attr.discreteSeekBarStyle, R.style.DefaultSeekBar);
 
-        PADDING_PX = (int) (PADDING_DP * displayMetrics.density) * 2;
+        int padding = (int) (PADDING_DP * displayMetrics.density) * 2;
         int textAppearanceId = a.getResourceId(R.styleable.DiscreteSeekBar_dsb_indicatorTextAppearance,
                 R.style.DefaultIndicatorTextAppearance);
         mNumber = new TextView(context);
         //Add some padding to this textView so the bubble has some space to breath
-        mNumber.setPadding(PADDING_PX, 0, PADDING_PX, 0);
+        mNumber.setPadding(padding, 0, padding, 0);
         mNumber.setTextAppearance(context, textAppearanceId);
         mNumber.setGravity(Gravity.CENTER);
         mNumber.setText(maxValue);
@@ -95,17 +93,17 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
         //add some padding for the elevation shadow not to be clipped
         //I'm sure there are better ways of doing this...
-        setPadding(PADDING_PX, PADDING_PX, PADDING_PX, PADDING_PX);
+        setPadding(padding, padding, padding, padding);
 
         resetSizes(maxValue);
 
         mSeparation = (int) (SEPARATION_DP * displayMetrics.density);
-        mThumbSize = (int) (ThumbDrawable.DEFAULT_SIZE_DP * displayMetrics.density);
+        int thumbSize = (int) (ThumbDrawable.DEFAULT_SIZE_DP * displayMetrics.density);
         ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indicatorColor);
-        mMarkerDrawable = new MarkerDrawable(color, mThumbSize);
+        mMarkerDrawable = new MarkerDrawable(color, thumbSize);
         mMarkerDrawable.setCallback(this);
         mMarkerDrawable.setMarkerListener(this);
-        mMarkerDrawable.setExternalOffset(PADDING_PX);
+        mMarkerDrawable.setExternalOffset(padding);
 
         //Elevation for anroid 5+
         float elevation = a.getDimension(R.styleable.DiscreteSeekBar_dsb_indicatorElevation, ELEVATION_DP * displayMetrics.density);
@@ -231,10 +229,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
         mMarkerDrawable.stop();
     }
 
-    public void setColor(int color) {
-        mMarkerDrawable = new MarkerDrawable(ColorStateList.valueOf(color), mThumbSize);
-        mMarkerDrawable.setCallback(this);
-        mMarkerDrawable.setMarkerListener(this);
-        mMarkerDrawable.setExternalOffset(PADDING_PX);
+    public void setColors(int startColor, int endColor) {
+        mMarkerDrawable.setColors(startColor, endColor);
     }
 }

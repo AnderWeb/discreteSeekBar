@@ -31,9 +31,9 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 
 /**
- * Implementation of {@link org.adw.library.widgets.discreteseekbar.internal.drawable.StateDrawable} to draw a morphing marker symbol.
+ * Implementation of {@link StateDrawable} to draw a morphing marker symbol.
  * <p>
- * It's basically an implementatin of an {@link android.graphics.drawable.Animatable} Drawable with the following details:
+ * It's basically an implementation of an {@link android.graphics.drawable.Animatable} Drawable with the following details:
  * </p>
  * <ul>
  * <li>Animates from a circle shape to a "marker" shape just using a RoundRect</li>
@@ -80,6 +80,17 @@ public class MarkerDrawable extends StateDrawable implements Animatable {
 
     public void setExternalOffset(int offset) {
         mExternalOffset = offset;
+    }
+
+    /**
+     * The two colors that will be used for the seek thumb.
+     *
+     * @param startColor Color used for the seek thumb
+     * @param endColor   Color used for popup indicator
+     */
+    public void setColors(int startColor, int endColor) {
+        mStartColor = startColor;
+        mEndColor = endColor;
     }
 
     @Override

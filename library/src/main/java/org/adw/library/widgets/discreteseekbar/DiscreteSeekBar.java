@@ -21,6 +21,7 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -79,8 +80,8 @@ public class DiscreteSeekBar extends View {
         /**
          * Return the desired value to be shown to the user.
          *
-         * @param value
-         * @return
+         * @param value The value to be transformed
+         * @return The transformed int
          */
         public int transformToInt(int value);
 
@@ -133,7 +134,6 @@ public class DiscreteSeekBar extends View {
     private Drawable mScrubber;
     private Drawable mRipple;
 
-    private int mThumbSize;
     private int mTrackHeight;
     private int mScrubberHeight;
     private int mAddedTouchBounds;
@@ -178,11 +178,11 @@ public class DiscreteSeekBar extends View {
         float density = context.getResources().getDisplayMetrics().density;
         mTrackHeight = (int) (1 * density);
         mScrubberHeight = (int) (4 * density);
-        mThumbSize = (int) (density * ThumbDrawable.DEFAULT_SIZE_DP);
+        int thumbSize = (int) (density * ThumbDrawable.DEFAULT_SIZE_DP);
 
         //Extra pixels for a touch area of 48dp
         int touchBounds = (int) (density * 32);
-        mAddedTouchBounds = (touchBounds - mThumbSize) / 2;
+        mAddedTouchBounds = (touchBounds - thumbSize) / 2;
 
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
@@ -257,7 +257,7 @@ public class DiscreteSeekBar extends View {
         mScrubber = shapeDrawable;
         mScrubber.setCallback(this);
 
-        ThumbDrawable thumbDrawable = new ThumbDrawable(progressColor, mThumbSize);
+        ThumbDrawable thumbDrawable = new ThumbDrawable(progressColor, thumbSize);
         mThumb = thumbDrawable;
         mThumb.setCallback(this);
         mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
@@ -419,15 +419,14 @@ public class DiscreteSeekBar extends View {
     }
 
     /**
-     * Sets the color of the seek thumb, as well as the color of the floating indicator bubble.
+     * Sets the color of the seek thumb, as well as the color of the popup indicator.
      *
-     * @param color The color the seek thumb will be changed to
+     * @param startColor The color the seek thumb will be changed to
+     * @param endColor   The color the popup indicator will be changed to
      */
-    public void setThumbColor(int color) {
-        mThumb = new ThumbDrawable(ColorStateList.valueOf(color), mThumbSize);
-        mThumb.setCallback(this);
-        mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
-        mIndicator.setColor(color);
+    public void setThumbColor(int startColor, int endColor) {
+        mThumb.setColorStateList(ColorStateList.valueOf(startColor));
+        mIndicator.setColors(startColor, endColor);
     }
 
     /**
@@ -436,8 +435,7 @@ public class DiscreteSeekBar extends View {
      * @param color The color the track will be changed to
      */
     public void setScrubberColor(int color) {
-        mScrubber = new TrackRectDrawable(ColorStateList.valueOf(color));
-        mScrubber.setCallback(this);
+        mScrubber.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
     private void notifyProgress(int value, boolean fromUser) {
@@ -964,4 +962,3 @@ public class DiscreteSeekBar extends View {
                 };
     }
 }
-
