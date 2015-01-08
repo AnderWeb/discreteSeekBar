@@ -67,7 +67,7 @@ public class DiscreteSeekBar extends View {
     /**
      * Interface to transform the current internal value of this DiscreteSeekBar to anther one for the visualization.
      * <p/>
-     * This will be used on the floating bubble to diaplay a different value if needed.
+     * This will be used on the floating bubble to display a different value if needed.
      * <p/>
      * Using this in conjunction with {@link #setIndicatorFormatter(String)} you will be able to manipulate the
      * value seen by the user
@@ -83,6 +83,24 @@ public class DiscreteSeekBar extends View {
          * @return
          */
         public int transform(int value);
+    }
+
+    /**
+     * Interface to transform the current internal value of this DiscreteSeekBar to anther one for the visualization.
+     * <p/>
+     * This will be used on the floating bubble to display a different value if needed.
+     * <p/>
+     *
+     * @see #setNumericTransformer(DiscreteSeekBar.NumericTransformer)
+     */
+    public interface NumericStringTransformer {
+        /**
+         * Return the desired value to be shown to the user.
+         *
+         * @param value The value to be transformed
+         * @return A formatted string
+         */
+        public String transform(int value);
     }
 
     private static class DefaultNumericTransformer implements NumericTransformer {
@@ -107,6 +125,7 @@ public class DiscreteSeekBar extends View {
     private Drawable mScrubber;
     private Drawable mRipple;
 
+    private int mThumbSize;
     private int mTrackHeight;
     private int mScrubberHeight;
     private int mAddedTouchBounds;
@@ -121,9 +140,10 @@ public class DiscreteSeekBar extends View {
     Formatter mFormatter;
     private String mIndicatorFormatter;
     private NumericTransformer mNumericTransformer;
+    private NumericStringTransformer mNumericStringTransformer;
     private OnProgressChangeListener mPublicChangeListener;
     private boolean mIsDragging;
-    private int mDraggOffset;
+    private int mDragOffset;
 
     private Rect mInvalidateRect = new Rect();
     private Rect mTempRect = new Rect();
@@ -151,11 +171,11 @@ public class DiscreteSeekBar extends View {
         float density = context.getResources().getDisplayMetrics().density;
         mTrackHeight = (int) (1 * density);
         mScrubberHeight = (int) (4 * density);
-        int thumbSize = (int) (density * ThumbDrawable.DEFAULT_SIZE_DP);
+        mThumbSize = (int) (density * ThumbDrawable.DEFAULT_SIZE_DP);
 
         //Extra pixels for a touch area of 48dp
         int touchBounds = (int) (density * 32);
-        mAddedTouchBounds = (touchBounds - thumbSize) / 2;
+        mAddedTouchBounds = (touchBounds - mThumbSize) / 2;
 
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
@@ -208,10 +228,10 @@ public class DiscreteSeekBar extends View {
         if (editMode && rippleColor == null) {
             rippleColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{Color.DKGRAY});
         }
-        if(editMode && trackColor == null) {
+        if (editMode && trackColor == null) {
             trackColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{Color.GRAY});
         }
-        if(editMode && progressColor == null) {
+        if (editMode && progressColor == null) {
             progressColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{0xff009688});
         }
         mRipple = SeekBarCompat.getRipple(rippleColor);
@@ -230,7 +250,7 @@ public class DiscreteSeekBar extends View {
         mScrubber = shapeDrawable;
         mScrubber.setCallback(this);
 
-        ThumbDrawable thumbDrawable = new ThumbDrawable(progressColor, thumbSize);
+        ThumbDrawable thumbDrawable = new ThumbDrawable(progressColor, mThumbSize);
         mThumb = thumbDrawable;
         mThumb.setCallback(this);
         mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
@@ -282,6 +302,33 @@ public class DiscreteSeekBar extends View {
      */
     public NumericTransformer getNumericTransformer() {
         return mNumericTransformer;
+    }
+
+    /**
+     * Sets the current {@link DiscreteSeekBar.NumericStringTransformer}
+     * If this value is set to a non null value, the seekbar will prefer to use this over the
+     * current {@link DiscreteSeekBar.NumericTransformer}
+     *
+     * @param transformer
+     * @see #getNumericStringTransformer()
+     */
+    public void setNumericStringTransformer(NumericStringTransformer transformer) {
+        mNumericStringTransformer = transformer;
+        //We need to refresh the PopupIndivator view
+        if (!isInEditMode()) {
+            mIndicator.updateSizes(mNumericStringTransformer.transform(mMax));
+        }
+        updateProgressMessage(mValue);
+    }
+
+    /**
+     * Retrieves the current {@link DiscreteSeekBar.NumericStringTransformer}
+     *
+     * @return NumericStringTransformer
+     * @see #setNumericStringTransformer
+     */
+    public NumericStringTransformer getNumericStringTransformer() {
+        return mNumericStringTransformer;
     }
 
     /**
@@ -385,6 +432,28 @@ public class DiscreteSeekBar extends View {
      */
     public void setOnProgressChangeListener(OnProgressChangeListener listener) {
         mPublicChangeListener = listener;
+    }
+
+    /**
+     * Sets the color of the seek thumb, as well as the color of the floating indicator bubble.
+     *
+     * @param color The color the seek thumb will be changed to
+     */
+    public void setThumbColor(int color) {
+        mThumb = new ThumbDrawable(ColorStateList.valueOf(color), mThumbSize);
+        mThumb.setCallback(this);
+        mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
+        mIndicator.setColor(color);
+    }
+
+    /**
+     * Sets the color of the seekbar scrubber
+     *
+     * @param color The color the track will be changed to
+     */
+    public void setScrubberColor(int color) {
+        mScrubber = new TrackRectDrawable(ColorStateList.valueOf(color));
+        mScrubber.setCallback(this);
     }
 
     private void notifyProgress(int value, boolean fromUser) {
@@ -533,6 +602,11 @@ public class DiscreteSeekBar extends View {
 
     private void updateProgressMessage(int value) {
         if (!isInEditMode()) {
+            if (mNumericStringTransformer != null) {
+                mIndicator.setValue(mNumericStringTransformer.transform(value));
+                return;
+            }
+
             mIndicator.setValue(convertValueToMessage(mNumericTransformer.transform(value)));
         }
     }
@@ -589,7 +663,7 @@ public class DiscreteSeekBar extends View {
             //If the user clicked outside the thumb, we compute the current position
             //and force an immediate drag to it.
             mIsDragging = true;
-            mDraggOffset = (bounds.width() / 2) - mAddedTouchBounds;
+            mDragOffset = (bounds.width() / 2) - mAddedTouchBounds;
             updateDragging(ev);
             //As the thumb may have moved, get the bounds again
             mThumb.copyBounds(bounds);
@@ -599,7 +673,7 @@ public class DiscreteSeekBar extends View {
             setPressed(true);
             attemptClaimDrag();
             setHotspot(ev.getX(), ev.getY());
-            mDraggOffset = (int) (ev.getX() - bounds.left - mAddedTouchBounds);
+            mDragOffset = (int) (ev.getX() - bounds.left - mAddedTouchBounds);
         }
         return mIsDragging;
     }
@@ -692,7 +766,7 @@ public class DiscreteSeekBar extends View {
         Rect oldBounds = mThumb.getBounds();
         int halfThumb = oldBounds.width() / 2;
         int addedThumb = mAddedTouchBounds;
-        int newX = x - mDraggOffset + halfThumb;
+        int newX = x - mDragOffset + halfThumb;
         int left = getPaddingLeft() + halfThumb + addedThumb;
         int right = getWidth() - (getPaddingRight() + halfThumb + addedThumb);
         if (newX < left) {
@@ -766,7 +840,7 @@ public class DiscreteSeekBar extends View {
         }
         final Rect finalBounds = mTempRect;
         mThumb.copyBounds(finalBounds);
-        if(!isInEditMode()) {
+        if (!isInEditMode()) {
             mIndicator.move(finalBounds.centerX());
         }
 
@@ -802,7 +876,7 @@ public class DiscreteSeekBar extends View {
     };
 
     private void showFloater() {
-        if(!isInEditMode()) {
+        if (!isInEditMode()) {
             mThumb.animateToPressed();
             mIndicator.showIndicator(this, mThumb.getBounds());
             notifyBubble(true);
@@ -811,7 +885,7 @@ public class DiscreteSeekBar extends View {
 
     private void hideFloater() {
         removeCallbacks(mShowIndicatorRunnable);
-        if(!isInEditMode()) {
+        if (!isInEditMode()) {
             mIndicator.dismiss();
             notifyBubble(false);
         }
@@ -834,7 +908,7 @@ public class DiscreteSeekBar extends View {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         removeCallbacks(mShowIndicatorRunnable);
-        if(!isInEditMode()) {
+        if (!isInEditMode()) {
             mIndicator.dismissComplete();
         }
     }
