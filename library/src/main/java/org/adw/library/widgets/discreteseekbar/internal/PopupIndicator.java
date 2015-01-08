@@ -199,9 +199,13 @@ public class PopupIndicator {
         return curFlags;
     }
 
+    public void setColor(int color) {
+        mPopupView.setColor(color);
+    }
+
     /**
      * Small FrameLayout class to hold and move the bubble around when requested
-     * I wanted to use the {@link org.adw.library.widgets.discreteseekbar.internal.Marker} directly
+     * I wanted to use the {@link Marker} directly
      * but doing so would make some things harder to implement
      * (like moving the marker around, having the Marker's outline to work, etc)
      */
@@ -257,6 +261,9 @@ public class PopupIndicator {
             }
         }
 
+        public void setColor(int color) {
+            mMarker.setColor(color);
+        }
     }
 
 }
