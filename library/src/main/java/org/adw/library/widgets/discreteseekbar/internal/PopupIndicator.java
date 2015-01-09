@@ -121,6 +121,9 @@ public class PopupIndicator {
         translateViewIntoPosition(x);
     }
 
+    public void setColors(int startColor, int endColor) {
+        mPopupView.setColors(startColor, endColor);
+    }
 
     /**
      * This will start the closing animation of the Marker and call onClosingComplete when finished
@@ -201,7 +204,7 @@ public class PopupIndicator {
 
     /**
      * Small FrameLayout class to hold and move the bubble around when requested
-     * I wanted to use the {@link org.adw.library.widgets.discreteseekbar.internal.Marker} directly
+     * I wanted to use the {@link Marker} directly
      * but doing so would make some things harder to implement
      * (like moving the marker around, having the Marker's outline to work, etc)
      */
@@ -257,6 +260,9 @@ public class PopupIndicator {
             }
         }
 
+        public void setColors(int startColor, int endColor) {
+            mMarker.setColors(startColor, endColor);
+        }
     }
 
 }

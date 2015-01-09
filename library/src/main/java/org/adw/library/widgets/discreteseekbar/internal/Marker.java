@@ -228,4 +228,8 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
         super.onDetachedFromWindow();
         mMarkerDrawable.stop();
     }
+
+    public void setColors(int startColor, int endColor) {
+        mMarkerDrawable.setColors(startColor, endColor);
+    }
 }
