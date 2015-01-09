@@ -144,6 +144,7 @@ public class DiscreteSeekBar extends View {
     Formatter mFormatter;
     private String mIndicatorFormatter;
     private NumericTransformer mNumericTransformer;
+    private StringBuilder mFormatBuilder;
     private OnProgressChangeListener mPublicChangeListener;
     private boolean mIsDragging;
     private int mDragOffset;
@@ -589,9 +590,24 @@ public class DiscreteSeekBar extends View {
 
     private String convertValueToMessage(int value) {
         String format = mIndicatorFormatter != null ? mIndicatorFormatter : DEFAULT_FORMATTER;
-        if (mFormatter == null || mFormatter.locale().equals(Locale.getDefault())) {
+        //We're trying to re-use the Formatter here to avoid too much memory allocations
+        //But I'm not completey sure if it's doing anything good... :(
+        //Previously, this condition was wrong so the Formatter was always re-created
+        //But as I fixed the condition, the formatter started outputting trash characters from previous
+        //calls, so I mark the StringBuilder as empty before calling format again.
+
+        //Anyways, I see the memory usage still go up on every call to this method
+        //and I have no clue on how to fix that... damn Strings...
+        if (mFormatter == null || !mFormatter.locale().equals(Locale.getDefault())) {
             int bufferSize = format.length() + String.valueOf(mMax).length();
-            mFormatter = new Formatter(new StringBuilder(bufferSize), Locale.getDefault());
+            if (mFormatBuilder == null) {
+                mFormatBuilder = new StringBuilder(bufferSize);
+            } else {
+                mFormatBuilder.ensureCapacity(bufferSize);
+            }
+            mFormatter = new Formatter(mFormatBuilder, Locale.getDefault());
+        } else {
+            mFormatBuilder.setLength(0);
         }
         return mFormatter.format(format, value).toString();
     }
