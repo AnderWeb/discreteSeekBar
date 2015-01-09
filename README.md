@@ -44,8 +44,8 @@ Once imported into your project, you just need to put them into your layous like
 <org.adw.library.widgets.discreteseekbar.DiscreteSeekBar
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:min="2"
-        app:max="15"
+        app:dsb_min="2"
+        app:dsb_max="15"
 />
 ```
 

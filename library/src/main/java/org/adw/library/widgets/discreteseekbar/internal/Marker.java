@@ -39,7 +39,7 @@ import org.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
 /**
  * {@link android.view.ViewGroup} to be used as the real indicator.
  * <p>
- * I've used this to be able to acomodate the TextView
+ * I've used this to be able to accommodate the TextView
  * and the {@link org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable}
  * with the required positions and offsets
  * </p>
