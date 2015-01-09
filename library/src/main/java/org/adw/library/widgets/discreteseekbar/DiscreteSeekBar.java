@@ -76,47 +76,43 @@ public class DiscreteSeekBar extends View {
      * @see #setIndicatorFormatter(String)
      * @see #setNumericTransformer(DiscreteSeekBar.NumericTransformer)
      */
-    public interface NumericTransformer {
+    public static abstract class NumericTransformer {
         /**
          * Return the desired value to be shown to the user.
+         * This value will be formatted using the format specified by {@link #setIndicatorFormatter} before displaying it
          *
          * @param value The value to be transformed
          * @return The transformed int
          */
-        public int transformToInt(int value);
+        public abstract int transform(int value);
 
         /**
          * Return the desired value to be shown to the user.
+         * This value will be displayed 'as is' without further formatting.
          *
          * @param value The value to be transformed
          * @return A formatted string
          */
-        public String transformToString(int value);
+        public String transformToString(int value) {
+            return String.valueOf(value);
+        }
 
         /**
          * Used to indicate which transform will be used. If this method returns true,
-         * {@link #transformToString(int)} will be used, otherwise {@link #transformToInt(int)}
+         * {@link #transformToString(int)} will be used, otherwise {@link #transform(int)}
          * will be used
          */
-        public boolean useStringTransform();
+        public boolean useStringTransform() {
+            return false;
+        }
     }
 
 
-    private static class DefaultNumericTransformer implements NumericTransformer {
+    private static class DefaultNumericTransformer extends NumericTransformer {
 
         @Override
-        public int transformToInt(int value) {
+        public int transform(int value) {
             return value;
-        }
-
-        @Override
-        public String transformToString(int value) {
-            return null;
-        }
-
-        @Override
-        public boolean useStringTransform() {
-            return false;
         }
     }
 
@@ -265,7 +261,6 @@ public class DiscreteSeekBar extends View {
 
         if (!editMode) {
             mIndicator = new PopupIndicator(context, attrs, defStyle, convertValueToMessage(mMax));
-            mIndicator.setValue(convertValueToMessage(mValue));
             mIndicator.setListener(mFloaterListener);
         }
         a.recycle();
@@ -299,7 +294,7 @@ public class DiscreteSeekBar extends View {
             if (mNumericTransformer.useStringTransform()) {
                 mIndicator.updateSizes(mNumericTransformer.transformToString(mMax));
             } else {
-                mIndicator.updateSizes(convertValueToMessage(mNumericTransformer.transformToInt(mMax)));
+                mIndicator.updateSizes(convertValueToMessage(mNumericTransformer.transform(mMax)));
             }
         }
         updateProgressMessage(mValue);
@@ -586,10 +581,9 @@ public class DiscreteSeekBar extends View {
         if (!isInEditMode()) {
             if (mNumericTransformer.useStringTransform()) {
                 mIndicator.setValue(mNumericTransformer.transformToString(value));
-                return;
+            } else {
+                mIndicator.setValue(convertValueToMessage(mNumericTransformer.transform(value)));
             }
-
-            mIndicator.setValue(convertValueToMessage(mNumericTransformer.transformToInt(value)));
         }
     }
 
