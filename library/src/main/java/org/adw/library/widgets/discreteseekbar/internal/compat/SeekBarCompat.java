@@ -118,4 +118,11 @@ public class SeekBarCompat {
         }
         return false;
     }
+
+    public static boolean isHardwareAccelerated(View view) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return SeekBarCompatDontCrash.isHardwareAccelerated(view);
+        }
+        return false;
+    }
 }

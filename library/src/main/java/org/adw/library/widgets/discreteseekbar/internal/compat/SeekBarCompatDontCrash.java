@@ -67,4 +67,8 @@ class SeekBarCompatDontCrash {
         }
         return false;
     }
+
+    public static boolean isHardwareAccelerated(View view) {
+        return view.isHardwareAccelerated();
+    }
 }
