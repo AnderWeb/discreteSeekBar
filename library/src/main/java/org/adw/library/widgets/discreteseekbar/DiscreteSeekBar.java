@@ -655,10 +655,6 @@ public class DiscreteSeekBar extends View {
         bounds.inset(-mAddedTouchBounds, -mAddedTouchBounds);
         mIsDragging = (bounds.contains((int) ev.getX(), (int) ev.getY()));
         if (!mIsDragging && mAllowTrackClick && !ignoreTrackIfInScrollContainer) {
-            if (mPublicChangeListener != null) {
-                mPublicChangeListener.onStartTrackingTouch(this);
-            }
-
             //If the user clicked outside the thumb, we compute the current position
             //and force an immediate drag to it.
             mIsDragging = true;
@@ -673,6 +669,9 @@ public class DiscreteSeekBar extends View {
             attemptClaimDrag();
             setHotspot(ev.getX(), ev.getY());
             mDragOffset = (int) (ev.getX() - bounds.left - mAddedTouchBounds);
+            if (mPublicChangeListener != null) {
+                mPublicChangeListener.onStartTrackingTouch(this);
+            }
         }
         return mIsDragging;
     }
