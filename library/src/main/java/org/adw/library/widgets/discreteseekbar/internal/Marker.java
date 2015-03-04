@@ -191,26 +191,13 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
     public void animateClose() {
         mMarkerDrawable.stop();
-        ViewCompat.animate(mNumber)
-                .alpha(0f)
-                .setDuration(100)
-                .withEndAction(new Runnable() {
-                    @Override
-                    public void run() {
-                        //We use INVISIBLE instead of GONE to avoid a requestLayout
-                        mNumber.setVisibility(View.INVISIBLE);
-                        mMarkerDrawable.animateToNormal();
-                    }
-                }).start();
+        mNumber.setVisibility(View.INVISIBLE);
+        mMarkerDrawable.animateToNormal();
     }
 
     @Override
     public void onOpeningComplete() {
         mNumber.setVisibility(View.VISIBLE);
-        ViewCompat.animate(mNumber)
-                .alpha(1f)
-                .setDuration(100)
-                .start();
         if (getParent() instanceof MarkerDrawable.MarkerAnimationListener) {
             ((MarkerDrawable.MarkerAnimationListener) getParent()).onOpeningComplete();
         }
