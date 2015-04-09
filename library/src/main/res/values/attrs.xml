@@ -31,7 +31,6 @@
         <attr name="dsb_indicatorElevation" format="dimension"/>
         <attr name="dsb_indicatorFormatter" format="string|reference"/>
         <attr name="dsb_rippleColor" format="color|reference"/>
-        <attr name="dsb_floatPopupEnabled" format="boolean"/>
         <attr name="dsb_indicatorPopupEnabled" format="boolean"/>
     </declare-styleable>
 </resources>
