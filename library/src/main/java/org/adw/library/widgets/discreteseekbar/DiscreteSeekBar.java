@@ -166,11 +166,11 @@ public class DiscreteSeekBar extends View {
     }
 
     public DiscreteSeekBar(Context context, AttributeSet attrs) {
-        this(context, attrs, R.style.DefaultSeekBar);
+        this(context, attrs, R.attr.discreteSeekBarStyle);
     }
 
-    public DiscreteSeekBar(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
+    public DiscreteSeekBar(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         setFocusable(true);
         setWillNotDraw(false);
 
@@ -184,9 +184,8 @@ public class DiscreteSeekBar extends View {
         int touchBounds = (int) (density * 32);
         mAddedTouchBounds = (touchBounds - thumbSize) / 2;
 
-
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
-                R.attr.discreteSeekBarStyle, defStyle);
+                defStyleAttr, R.style.Widget_DiscreteSeekBar);
 
         int max = 100;
         int min = 0;
@@ -264,7 +263,7 @@ public class DiscreteSeekBar extends View {
 
 
         if (!editMode) {
-            mIndicator = new PopupIndicator(context, attrs, defStyle, convertValueToMessage(mMax));
+            mIndicator = new PopupIndicator(context, attrs, defStyleAttr, convertValueToMessage(mMax));
             mIndicator.setListener(mFloaterListener);
         }
         a.recycle();

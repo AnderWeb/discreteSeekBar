@@ -21,8 +21,8 @@
     <color name="dsb_ripple_color_pressed">#77939393</color>
     <color name="dsb_ripple_color_focused">#99999999</color>
 
-    <style name="DefaultSeekBar" parent="android:Widget">
-        <item name="dsb_indicatorTextAppearance">@style/DefaultIndicatorTextAppearance</item>
+    <style name="Widget.DiscreteSeekBar" parent="android:Widget">
+        <item name="dsb_indicatorTextAppearance">@style/Widget.DiscreteIndicatorTextAppearance</item>
         <item name="dsb_progressColor">@color/dsb_progress_color_list</item>
         <item name="dsb_trackColor">@color/dsb_track_color_list</item>
         <item name="dsb_rippleColor">@color/dsb_ripple_color_list</item>
@@ -31,7 +31,7 @@
         <item name="dsb_mirrorForRtl">true</item>
     </style>
 
-    <style name="DefaultIndicatorTextAppearance" parent="android:TextAppearance.Small">
+    <style name="Widget.DiscreteIndicatorTextAppearance" parent="android:TextAppearance.Small">
         <item name="android:textColor">?android:attr/textColorPrimaryInverse</item>
         <item name="android:padding">6dp</item>
     </style>
