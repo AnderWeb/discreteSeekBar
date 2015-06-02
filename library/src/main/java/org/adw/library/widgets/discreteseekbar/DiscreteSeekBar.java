@@ -143,6 +143,7 @@ public class DiscreteSeekBar extends View {
     private int mKeyProgressIncrement = 1;
     private boolean mMirrorForRtl = false;
     private boolean mAllowTrackClick = true;
+    private boolean mIndicatorPopupEnabled = true;
     //We use our own Formatter to avoid creating new instances on every progress change
     Formatter mFormatter;
     private String mIndicatorFormatter;
@@ -193,7 +194,7 @@ public class DiscreteSeekBar extends View {
         int value = 0;
         mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
         mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
-
+        mIndicatorPopupEnabled = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorPopupEnabled, mIndicatorPopupEnabled);
         int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
         int indexMin = R.styleable.DiscreteSeekBar_dsb_min;
         int indexValue = R.styleable.DiscreteSeekBar_dsb_value;
@@ -437,6 +438,14 @@ public class DiscreteSeekBar extends View {
         mScrubber.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
     }
 
+    /**
+     * If {@code enabled} is false the indicator won't appear. By default popup indicator is
+     * enabled.
+     */
+    public void setIndicatorPopupEnabled(boolean enabled) {
+        this.mIndicatorPopupEnabled = enabled;
+    }
+
     private void notifyProgress(int value, boolean fromUser) {
         if (mPublicChangeListener != null) {
             mPublicChangeListener.onProgressChanged(DiscreteSeekBar.this, value, fromUser);
@@ -567,7 +576,7 @@ public class DiscreteSeekBar extends View {
                 pressed = true;
             }
         }
-        if (isEnabled() && (focused || pressed)) {
+        if (isEnabled() && (focused || pressed) && mIndicatorPopupEnabled) {
             //We want to add a small delay here to avoid
             //poping in/out on simple taps
             removeCallbacks(mShowIndicatorRunnable);
