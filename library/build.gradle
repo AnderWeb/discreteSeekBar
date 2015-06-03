@@ -15,19 +15,63 @@
  */
 
 apply plugin: 'com.android.library'
+apply plugin: 'bintray-release' // must be applied after your artifact generating plugin (eg. java / com.android.library)
 
-android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.1"
-
-    defaultConfig {
-        minSdkVersion 4
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.novoda:bintray-release:0.2.10'
     }
 }
 
+/**
+ * Properties for versioning
+ */
+def libVersionCode = 1
+def libVersion = '0.1.0'
+
+
+android {
+    compileSdkVersion 22
+    buildToolsVersion '22.0.1'
+
+    defaultConfig {
+        minSdkVersion 4
+        targetSdkVersion 22
+        versionCode libVersionCode
+        versionName libVersion
+    }
+}
+
+publish {
+    /**
+     * Properties for BinTray upload
+     */
+    Properties properties = new Properties()
+    File bintrayPropertiesFile = project.file('abintray.properties');
+    if (bintrayPropertiesFile.exists()) {
+        properties.load(bintrayPropertiesFile.newDataInputStream())
+    }
+    def btrayUser = properties.getProperty("bintray.user", "")
+    def btrayKey = properties.getProperty("bintray.apikey", "")
+
+    bintrayUser = btrayUser
+    bintrayKey = btrayKey
+    userOrg = btrayUser
+    groupId = 'org.adw.library'
+    artifactId = 'discrete-seekbar'
+    licences = "['Apache-2.0']"
+    publishVersion = libVersion
+    description = 'DiscreteSeekbar is my poor attempt to develop an android implementation of the Discrete Slider component from the Google Material Design Guidelines'
+    website = 'https://github.com/AnderWeb/discreteSeekBar'
+    issueTracker = 'https://github.com/AnderWeb/discreteSeekBar/issues'
+    repository = 'https://github.com/AnderWeb/discreteSeekBar.git'
+    autoPublish = false
+    dryRun = false
+}
+
 dependencies {
-    compile 'com.android.support:support-v4:21.0.2'
+    compile 'com.android.support:support-v4:22.1.1'
 }
