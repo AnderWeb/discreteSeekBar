@@ -17,7 +17,9 @@
 
 <resources>
     <!-- DiscreteSeekBar specific attributes -->
-    <attr name="discreteSeekBarStyle" format="reference"/>
+    <declare-styleable name="Theme">
+      <attr name="discreteSeekBarStyle" format="reference"/>
+    </declare-styleable>
     <declare-styleable name="DiscreteSeekBar">
         <attr name="dsb_min" format="integer|dimension"/>
         <attr name="dsb_max" format="integer|dimension"/>
