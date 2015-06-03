@@ -50,7 +50,7 @@ publish {
      * Properties for BinTray upload
      */
     Properties properties = new Properties()
-    File bintrayPropertiesFile = project.file('abintray.properties');
+    File bintrayPropertiesFile = project.file('bintray.properties');
     if (bintrayPropertiesFile.exists()) {
         properties.load(bintrayPropertiesFile.newDataInputStream())
     }
