@@ -61,8 +61,8 @@ public class MarkerDrawable extends StateDrawable implements Animatable {
     //for its internal padding between circle state and marker state
     private int mExternalOffset;
     //colors for interpolation
-    private int mStartColor;
-    private int mEndColor;
+    private int mStartColor;//Color when the Marker is OPEN
+    private int mEndColor;//Color when the arker is CLOSED
 
     Path mPath = new Path();
     RectF mRect = new RectF();

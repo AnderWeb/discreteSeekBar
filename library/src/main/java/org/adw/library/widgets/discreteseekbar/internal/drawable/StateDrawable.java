@@ -41,8 +41,7 @@ public abstract class StateDrawable extends Drawable {
 
     public StateDrawable(@NonNull ColorStateList tintStateList) {
         super();
-        mTintStateList = tintStateList;
-        mCurrentColor = tintStateList.getDefaultColor();
+        setColorStateList(tintStateList);
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     }
 
@@ -84,6 +83,7 @@ public abstract class StateDrawable extends Drawable {
 
     public void setColorStateList(@NonNull ColorStateList tintStateList) {
         mTintStateList = tintStateList;
+        mCurrentColor = tintStateList.getDefaultColor();
     }
 
     /**

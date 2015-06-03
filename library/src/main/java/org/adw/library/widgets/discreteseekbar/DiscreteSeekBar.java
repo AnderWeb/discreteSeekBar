@@ -21,12 +21,12 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v4.view.MotionEventCompat;
@@ -65,6 +65,7 @@ public class DiscreteSeekBar extends View {
         public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser);
 
         public void onStartTrackingTouch(DiscreteSeekBar seekBar);
+
         public void onStopTrackingTouch(DiscreteSeekBar seekBar);
     }
 
@@ -128,9 +129,10 @@ public class DiscreteSeekBar extends View {
     private static final int FOCUSED_STATE = android.R.attr.state_focused;
     private static final int PROGRESS_ANIMATION_DURATION = 250;
     private static final int INDICATOR_DELAY_FOR_TAPS = 150;
+    private static final int DEFAULT_THUMB_COLOR = 0xff009688;
     private ThumbDrawable mThumb;
-    private Drawable mTrack;
-    private Drawable mScrubber;
+    private TrackRectDrawable mTrack;
+    private TrackRectDrawable mScrubber;
     private Drawable mRipple;
 
     private int mTrackHeight;
@@ -232,14 +234,14 @@ public class DiscreteSeekBar extends View {
         ColorStateList progressColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_progressColor);
         ColorStateList rippleColor = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_rippleColor);
         boolean editMode = isInEditMode();
-        if (editMode && rippleColor == null) {
+        if (editMode || rippleColor == null) {
             rippleColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{Color.DKGRAY});
         }
-        if (editMode && trackColor == null) {
+        if (editMode || trackColor == null) {
             trackColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{Color.GRAY});
         }
-        if (editMode && progressColor == null) {
-            progressColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{0xff009688});
+        if (editMode || progressColor == null) {
+            progressColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{DEFAULT_THUMB_COLOR});
         }
         mRipple = SeekBarCompat.getRipple(rippleColor);
         if (isLollipopOrGreater) {
@@ -257,8 +259,7 @@ public class DiscreteSeekBar extends View {
         mScrubber = shapeDrawable;
         mScrubber.setCallback(this);
 
-        ThumbDrawable thumbDrawable = new ThumbDrawable(progressColor, thumbSize);
-        mThumb = thumbDrawable;
+        mThumb = new ThumbDrawable(progressColor, thumbSize);
         mThumb.setCallback(this);
         mThumb.setBounds(0, 0, mThumb.getIntrinsicWidth(), mThumb.getIntrinsicHeight());
 
@@ -413,19 +414,54 @@ public class DiscreteSeekBar extends View {
      * @param listener The seek bar notification listener
      * @see DiscreteSeekBar.OnProgressChangeListener
      */
-    public void setOnProgressChangeListener(OnProgressChangeListener listener) {
+    public void setOnProgressChangeListener(@Nullable OnProgressChangeListener listener) {
         mPublicChangeListener = listener;
     }
 
     /**
      * Sets the color of the seek thumb, as well as the color of the popup indicator.
      *
-     * @param startColor The color the seek thumb will be changed to
-     * @param endColor   The color the popup indicator will be changed to
+     * @param thumbColor     The color the seek thumb will be changed to
+     * @param indicatorColor The color the popup indicator will be changed to
+     *                       The indicator will animate from thumbColor to indicatorColor
+     *                       when opening
      */
-    public void setThumbColor(int startColor, int endColor) {
-        mThumb.setColorStateList(ColorStateList.valueOf(startColor));
-        mIndicator.setColors(startColor, endColor);
+    public void setThumbColor(int thumbColor, int indicatorColor) {
+        mThumb.setColorStateList(ColorStateList.valueOf(thumbColor));
+        mIndicator.setColors(indicatorColor, thumbColor);
+    }
+
+    /**
+     * Sets the color of the seek thumb, as well as the color of the popup indicator.
+     *
+     * @param thumbColorStateList The ColorStateList the seek thumb will be changed to
+     * @param indicatorColor      The color the popup indicator will be changed to
+     *                            The indicator will animate from thumbColorStateList(pressed state) to indicatorColor
+     *                            when opening
+     */
+    public void setThumbColor(@NonNull ColorStateList thumbColorStateList, int indicatorColor) {
+        mThumb.setColorStateList(thumbColorStateList);
+        //we use the "pressed" color to morph the indicator from it to its own color
+        int thumbColor = thumbColorStateList.getColorForState(new int[]{PRESSED_STATE}, thumbColorStateList.getDefaultColor());
+        mIndicator.setColors(indicatorColor, thumbColor);
+    }
+
+    /**
+     * Sets the color of the seekbar scrubber
+     *
+     * @param color The color the track  scrubber will be changed to
+     */
+    public void setScrubberColor(int color) {
+        mScrubber.setColorStateList(ColorStateList.valueOf(color));
+    }
+
+    /**
+     * Sets the color of the seekbar scrubber
+     *
+     * @param colorStateList The ColorStateList the track scrubber will be changed to
+     */
+    public void setScrubberColor(@NonNull ColorStateList colorStateList) {
+        mScrubber.setColorStateList(colorStateList);
     }
 
     /**
@@ -433,8 +469,17 @@ public class DiscreteSeekBar extends View {
      *
      * @param color The color the track will be changed to
      */
-    public void setScrubberColor(int color) {
-        mScrubber.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
+    public void setTrackColor(int color) {
+        mTrack.setColorStateList(ColorStateList.valueOf(color));
+    }
+
+    /**
+     * Sets the color of the seekbar scrubber
+     *
+     * @param colorStateList The ColorStateList the track will be changed to
+     */
+    public void setTrackColor(@NonNull ColorStateList colorStateList) {
+        mTrack.setColorStateList(colorStateList);
     }
 
     /**
