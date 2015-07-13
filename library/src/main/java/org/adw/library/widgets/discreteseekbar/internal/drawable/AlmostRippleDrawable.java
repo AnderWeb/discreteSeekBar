@@ -49,10 +49,23 @@ public class AlmostRippleDrawable extends StateDrawable implements Animatable {
 
     public AlmostRippleDrawable(@NonNull ColorStateList tintStateList) {
         super(tintStateList);
+        int defaultColor = tintStateList.getDefaultColor();
         mInterpolator = new AccelerateDecelerateInterpolator();
-        mFocusedColor = tintStateList.getColorForState(new int[]{android.R.attr.state_focused}, 0xFFFF0000);
-        mPressedColor = tintStateList.getColorForState(new int[]{android.R.attr.state_pressed}, 0xFFFF0000);
-        mDisabledColor = tintStateList.getColorForState(new int[]{-android.R.attr.state_enabled}, 0xFFFF0000);
+        mFocusedColor = tintStateList.getColorForState(new int[]{android.R.attr.state_enabled, android.R.attr.state_focused}, defaultColor);
+        mPressedColor = tintStateList.getColorForState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed}, defaultColor);
+        mDisabledColor = tintStateList.getColorForState(new int[]{-android.R.attr.state_enabled}, defaultColor);
+
+        //The ripple should be partially transparent
+        mFocusedColor = getModulatedAlphaColor(130, mFocusedColor);
+        mPressedColor = getModulatedAlphaColor(130, mPressedColor);
+        mDisabledColor = getModulatedAlphaColor(130, mDisabledColor);
+    }
+
+    private static int getModulatedAlphaColor(int alphaValue, int originalColor) {
+        int alpha = Color.alpha(originalColor);
+        int scale = alphaValue + (alphaValue >> 7);
+        alpha = alpha * scale >> 8;
+        return Color.argb(alpha, Color.red(originalColor), Color.green(originalColor), Color.blue(originalColor));
     }
 
     @Override

@@ -73,7 +73,7 @@ public class MarkerDrawable extends StateDrawable implements Animatable {
         super(tintList);
         mInterpolator = new AccelerateDecelerateInterpolator();
         mClosedStateSize = closedSize;
-        mStartColor = tintList.getColorForState(new int[]{android.R.attr.state_pressed}, tintList.getDefaultColor());
+        mStartColor = tintList.getColorForState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed}, tintList.getDefaultColor());
         mEndColor = tintList.getDefaultColor();
 
     }
