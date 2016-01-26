@@ -49,8 +49,12 @@ public class AlmostRippleDrawable extends StateDrawable implements Animatable {
 
     public AlmostRippleDrawable(@NonNull ColorStateList tintStateList) {
         super(tintStateList);
-        int defaultColor = tintStateList.getDefaultColor();
         mInterpolator = new AccelerateDecelerateInterpolator();
+        setColor(tintStateList);
+    }
+
+    public void setColor(@NonNull ColorStateList tintStateList) {
+        int defaultColor = tintStateList.getDefaultColor();
         mFocusedColor = tintStateList.getColorForState(new int[]{android.R.attr.state_enabled, android.R.attr.state_focused}, defaultColor);
         mPressedColor = tintStateList.getColorForState(new int[]{android.R.attr.state_enabled, android.R.attr.state_pressed}, defaultColor);
         mDisabledColor = tintStateList.getColorForState(new int[]{-android.R.attr.state_enabled}, defaultColor);

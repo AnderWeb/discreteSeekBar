@@ -247,13 +247,13 @@ public class DiscreteSeekBar extends View {
         if (editMode || progressColor == null) {
             progressColor = new ColorStateList(new int[][]{new int[]{}}, new int[]{DEFAULT_THUMB_COLOR});
         }
+
         mRipple = SeekBarCompat.getRipple(rippleColor);
         if (isLollipopOrGreater) {
             SeekBarCompat.setBackground(this, mRipple);
         } else {
             mRipple.setCallback(this);
         }
-
 
         TrackRectDrawable shapeDrawable = new TrackRectDrawable(trackColor);
         mTrack = shapeDrawable;
@@ -467,6 +467,24 @@ public class DiscreteSeekBar extends View {
      */
     public void setScrubberColor(@NonNull ColorStateList colorStateList) {
         mScrubber.setColorStateList(colorStateList);
+    }
+
+    /**
+     * Sets the color of the seekbar ripple
+     *
+     * @param color The color the track  ripple will be changed to
+     */
+    public void setRippleColor(int color) {
+        setRippleColor(new ColorStateList(new int[][]{new int[]{}}, new int[]{color}));
+    }
+
+    /**
+     * Sets the color of the seekbar ripple
+     *
+     * @param colorStateList The ColorStateList the track ripple will be changed to
+     */
+    public void setRippleColor(@NonNull ColorStateList colorStateList) {
+        SeekBarCompat.setRippleColor(mRipple, colorStateList);
     }
 
     /**

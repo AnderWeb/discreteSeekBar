@@ -18,7 +18,9 @@ package org.adw.library.widgets.discreteseekbar.internal.compat;
 
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.view.ViewParent;
@@ -60,6 +62,19 @@ public class SeekBarCompat {
             return SeekBarCompatDontCrash.getRipple(colorStateList);
         } else {
             return new AlmostRippleDrawable(colorStateList);
+        }
+    }
+
+    /**
+     * Sets the color of the seekbar ripple
+     * @param drawable
+     * @param colorStateList The ColorStateList the track ripple will be changed to
+     */
+    public static void setRippleColor(@NonNull Drawable drawable, ColorStateList colorStateList) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ((RippleDrawable) drawable).setColor(colorStateList);
+        } else {
+            ((AlmostRippleDrawable) drawable).setColor(colorStateList);
         }
     }
 
