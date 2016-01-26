@@ -49,7 +49,6 @@ import org.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
 public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationListener {
     private static final int PADDING_DP = 4;
     private static final int ELEVATION_DP = 8;
-    private static final int SEPARATION_DP = 30;
     //The TextView to show the info
     private TextView mNumber;
     //The max width of this View
@@ -59,19 +58,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
     private int mSeparation;
     MarkerDrawable mMarkerDrawable;
 
-    public Marker(Context context) {
-        this(context, null);
-    }
-
-    public Marker(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.discreteSeekBarStyle);
-    }
-
-    public Marker(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, "0");
-    }
-
-    public Marker(Context context, AttributeSet attrs, int defStyleAttr, String maxValue) {
+    public Marker(Context context, AttributeSet attrs, int defStyleAttr, String maxValue, int thumbSize, int separation) {
         super(context, attrs, defStyleAttr);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
@@ -97,8 +84,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
         resetSizes(maxValue);
 
-        mSeparation = (int) (SEPARATION_DP * displayMetrics.density);
-        int thumbSize = (int) (ThumbDrawable.DEFAULT_SIZE_DP * displayMetrics.density);
+        mSeparation = separation; //
         ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indicatorColor);
         mMarkerDrawable = new MarkerDrawable(color, thumbSize);
         mMarkerDrawable.setCallback(this);

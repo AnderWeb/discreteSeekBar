@@ -34,5 +34,9 @@
         <attr name="dsb_indicatorFormatter" format="string|reference"/>
         <attr name="dsb_rippleColor" format="color|reference"/>
         <attr name="dsb_indicatorPopupEnabled" format="boolean"/>
+        <attr name="dsb_trackHeight" format="integer|dimension"/>
+        <attr name="dsb_scrubberHeight" format="integer|dimension"/>
+        <attr name="dsb_thumbSize" format="integer|dimension"/>
+        <attr name="dsb_indicatorSeparation" format="integer|dimension"/>
     </declare-styleable>
 </resources>

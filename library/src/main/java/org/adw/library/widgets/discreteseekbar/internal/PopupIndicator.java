@@ -59,9 +59,9 @@ public class PopupIndicator {
     private int[] mDrawingLocation = new int[2];
     Point screenSize = new Point();
 
-    public PopupIndicator(Context context, AttributeSet attrs, int defStyleAttr, String maxValue) {
+    public PopupIndicator(Context context, AttributeSet attrs, int defStyleAttr, String maxValue, int thumbSize, int separation) {
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        mPopupView = new Floater(context, attrs, defStyleAttr, maxValue);
+        mPopupView = new Floater(context, attrs, defStyleAttr, maxValue, thumbSize, separation);
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         screenSize.set(displayMetrics.widthPixels, displayMetrics.heightPixels);
     }
@@ -212,9 +212,9 @@ public class PopupIndicator {
         private Marker mMarker;
         private int mOffset;
 
-        public Floater(Context context, AttributeSet attrs, int defStyleAttr, String maxValue) {
+        public Floater(Context context, AttributeSet attrs, int defStyleAttr, String maxValue, int thumbSize, int separation) {
             super(context);
-            mMarker = new Marker(context, attrs, defStyleAttr, maxValue);
+            mMarker = new Marker(context, attrs, defStyleAttr, maxValue, thumbSize, separation);
             addView(mMarker, new LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.LEFT | Gravity.TOP));
         }
 

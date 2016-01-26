@@ -130,6 +130,7 @@ public class DiscreteSeekBar extends View {
     private static final int PROGRESS_ANIMATION_DURATION = 250;
     private static final int INDICATOR_DELAY_FOR_TAPS = 150;
     private static final int DEFAULT_THUMB_COLOR = 0xff009688;
+    private static final int SEPARATION_DP = 5;
     private ThumbDrawable mThumb;
     private TrackRectDrawable mTrack;
     private TrackRectDrawable mScrubber;
@@ -179,13 +180,6 @@ public class DiscreteSeekBar extends View {
 
         mTouchSlop = ViewConfiguration.get(context).getScaledTouchSlop();
         float density = context.getResources().getDisplayMetrics().density;
-        mTrackHeight = (int) (1 * density);
-        mScrubberHeight = (int) (4 * density);
-        int thumbSize = (int) (density * ThumbDrawable.DEFAULT_SIZE_DP);
-
-        //Extra pixels for a touch area of 48dp
-        int touchBounds = (int) (density * 32);
-        mAddedTouchBounds = (touchBounds - thumbSize) / 2;
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
                 defStyleAttr, R.style.Widget_DiscreteSeekBar);
@@ -196,6 +190,16 @@ public class DiscreteSeekBar extends View {
         mMirrorForRtl = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_mirrorForRtl, mMirrorForRtl);
         mAllowTrackClick = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_allowTrackClickToDrag, mAllowTrackClick);
         mIndicatorPopupEnabled = a.getBoolean(R.styleable.DiscreteSeekBar_dsb_indicatorPopupEnabled, mIndicatorPopupEnabled);
+        mTrackHeight = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_trackHeight, (int) (1 * density));
+        mScrubberHeight = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_scrubberHeight, (int) (4 * density));
+        int thumbSize = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_thumbSize, (int) (density * ThumbDrawable.DEFAULT_SIZE_DP));
+        int separation = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_indicatorSeparation,
+                (int) (SEPARATION_DP * density));
+
+        //Extra pixels for a touch area of 48dp
+        int touchBounds = (int) (density * 48);
+        mAddedTouchBounds = Math.max(0, (touchBounds - thumbSize) / 2);
+
         int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
         int indexMin = R.styleable.DiscreteSeekBar_dsb_min;
         int indexValue = R.styleable.DiscreteSeekBar_dsb_value;
@@ -265,7 +269,8 @@ public class DiscreteSeekBar extends View {
 
 
         if (!editMode) {
-            mIndicator = new PopupIndicator(context, attrs, defStyleAttr, convertValueToMessage(mMax));
+            mIndicator = new PopupIndicator(context, attrs, defStyleAttr, convertValueToMessage(mMax),
+                    thumbSize, thumbSize + mAddedTouchBounds + separation);
             mIndicator.setListener(mFloaterListener);
         }
         a.recycle();
