@@ -196,8 +196,8 @@ public class DiscreteSeekBar extends View {
         int separation = a.getDimensionPixelSize(R.styleable.DiscreteSeekBar_dsb_indicatorSeparation,
                 (int) (SEPARATION_DP * density));
 
-        //Extra pixels for a touch area of 48dp
-        int touchBounds = (int) (density * 48);
+        //Extra pixels for a minimum touch area of 32dp
+        int touchBounds = (int) (density * 32);
         mAddedTouchBounds = Math.max(0, (touchBounds - thumbSize) / 2);
 
         int indexMax = R.styleable.DiscreteSeekBar_dsb_max;
