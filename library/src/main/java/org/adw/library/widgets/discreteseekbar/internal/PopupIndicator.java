@@ -62,8 +62,6 @@ public class PopupIndicator {
     public PopupIndicator(Context context, AttributeSet attrs, int defStyleAttr, String maxValue, int thumbSize, int separation) {
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         mPopupView = new Floater(context, attrs, defStyleAttr, maxValue, thumbSize, separation);
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        screenSize.set(displayMetrics.widthPixels, displayMetrics.heightPixels);
     }
 
     public void updateSizes(String maxValue) {
@@ -147,6 +145,9 @@ public class PopupIndicator {
     }
 
     private void updateLayoutParamsForPosiion(View anchor, WindowManager.LayoutParams p, int yOffset) {
+        DisplayMetrics displayMetrics = anchor.getResources().getDisplayMetrics();
+        screenSize.set(displayMetrics.widthPixels, displayMetrics.heightPixels);
+
         measureFloater();
         int measuredHeight = mPopupView.getMeasuredHeight();
         int paddingBottom = mPopupView.mMarker.getPaddingBottom();
