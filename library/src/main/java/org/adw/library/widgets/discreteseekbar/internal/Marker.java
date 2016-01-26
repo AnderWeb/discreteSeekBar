@@ -34,7 +34,6 @@ import android.widget.TextView;
 import org.adw.library.widgets.discreteseekbar.R;
 import org.adw.library.widgets.discreteseekbar.internal.compat.SeekBarCompat;
 import org.adw.library.widgets.discreteseekbar.internal.drawable.MarkerDrawable;
-import org.adw.library.widgets.discreteseekbar.internal.drawable.ThumbDrawable;
 
 /**
  * {@link android.view.ViewGroup} to be used as the real indicator.
@@ -60,6 +59,9 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
     public Marker(Context context, AttributeSet attrs, int defStyleAttr, String maxValue, int thumbSize, int separation) {
         super(context, attrs, defStyleAttr);
+        //as we're reading the parent DiscreteSeekBar attributes, it may wrongly set this view's visibility.
+        setVisibility(View.VISIBLE);
+        
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DiscreteSeekBar,
                 R.attr.discreteSeekBarStyle, R.style.Widget_DiscreteSeekBar);
@@ -84,7 +86,7 @@ public class Marker extends ViewGroup implements MarkerDrawable.MarkerAnimationL
 
         resetSizes(maxValue);
 
-        mSeparation = separation; //
+        mSeparation = separation;
         ColorStateList color = a.getColorStateList(R.styleable.DiscreteSeekBar_dsb_indicatorColor);
         mMarkerDrawable = new MarkerDrawable(color, thumbSize);
         mMarkerDrawable.setCallback(this);
