@@ -19,5 +19,5 @@
     <item android:color="@color/dsb_disabled_color" android:state_enabled="false"/>
     <item android:color="@color/dsb_ripple_color_focused" android:state_focused="true"/>
     <item android:color="@color/dsb_ripple_color_pressed" android:state_pressed="true"/>
-    <item android:color="@android:color/transparent"/>
+    <item android:color="@color/dsb_ripple_color_focused"/>
 </selector>
