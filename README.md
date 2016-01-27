@@ -69,6 +69,7 @@ You can tweak a few things of the DiscreteSeekbar:
 * **dsb_mirrorForRtl**: reverse the DiscreteSeekBar for RTL locales
 * **dsb_allowTrackClickToDrag**: allows clicking outside the thumb circle to initiate drag. Default TRUE
 * **dsb_indicatorFormatter**: a string [Format] to apply to the value inside the bubble indicator.
+* **dsb_indicatorPopupEnabled**: choose if the bubble indicator will be shown. Default TRUE 
 
 ####Design
  
@@ -78,6 +79,10 @@ You can tweak a few things of the DiscreteSeekbar:
 * **dsb_indicatorColor**: color/colorStateList for the bubble shaped drawable
 * **dsb_indicatorElevation**: related to android:elevation. Will only be used on API level 21+
 * **dsb_rippleColor**: color/colorStateList for the ripple drawable seen when pressing the thumb. (Yes, it does a kind of "ripple" on API levels lower than 21 and a real RippleDrawable for 21+.
+* **dsb_trackHeight**: dimension for the height of the track drawable.
+* **dsb_scrubberHeight**: dimension for the height of the scrubber (selected area) drawable.
+* **dsb_thumbSize**: dimension for the size of the thumb drawable.
+* **dsb_indicatorSeparation**: dimension for the vertical distance from the thumb to the indicator. 
 
 You can also use the attribute **discreteSeekBarStyle** on your themes with a custom Style to be applied to all the DiscreteSeekBars on your app/activity/fragment/whatever.
 
