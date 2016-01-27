@@ -519,6 +519,7 @@ public class DiscreteSeekBar extends View {
         }
 
     }
+
     private void notifyProgress(int value, boolean fromUser) {
         if (mPublicChangeListener != null) {
             mPublicChangeListener.onProgressChanged(DiscreteSeekBar.this, value, fromUser);
@@ -719,6 +720,12 @@ public class DiscreteSeekBar extends View {
                 }
                 break;
             case MotionEvent.ACTION_UP:
+                if (!isDragging() && mAllowTrackClick) {
+                    startDragging(event, false);
+                    updateDragging(event);
+                }
+                stopDragging();
+                break;
             case MotionEvent.ACTION_CANCEL:
                 stopDragging();
                 break;
