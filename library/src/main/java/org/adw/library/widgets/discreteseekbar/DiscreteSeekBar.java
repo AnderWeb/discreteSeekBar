@@ -300,13 +300,7 @@ public class DiscreteSeekBar extends View {
     public void setNumericTransformer(@Nullable NumericTransformer transformer) {
         mNumericTransformer = transformer != null ? transformer : new DefaultNumericTransformer();
         //We need to refresh the PopupIndicator view
-        if (!isInEditMode()) {
-            if (mNumericTransformer.useStringTransform()) {
-                mIndicator.updateSizes(mNumericTransformer.transformToString(mMax));
-            } else {
-                mIndicator.updateSizes(convertValueToMessage(mNumericTransformer.transform(mMax)));
-            }
-        }
+        updateIndicatorSizes();
         updateProgressMessage(mValue);
     }
 
@@ -343,6 +337,8 @@ public class DiscreteSeekBar extends View {
         if (mValue < mMin || mValue > mMax) {
             setProgress(mMin);
         }
+        //We need to refresh the PopupIndicator view
+        updateIndicatorSizes();
     }
 
     public int getMax() {
@@ -513,6 +509,16 @@ public class DiscreteSeekBar extends View {
         this.mIndicatorPopupEnabled = enabled;
     }
 
+    private void updateIndicatorSizes() {
+        if (!isInEditMode()) {
+            if (mNumericTransformer.useStringTransform()) {
+                mIndicator.updateSizes(mNumericTransformer.transformToString(mMax));
+            } else {
+                mIndicator.updateSizes(convertValueToMessage(mNumericTransformer.transform(mMax)));
+            }
+        }
+
+    }
     private void notifyProgress(int value, boolean fromUser) {
         if (mPublicChangeListener != null) {
             mPublicChangeListener.onProgressChanged(DiscreteSeekBar.this, value, fromUser);
