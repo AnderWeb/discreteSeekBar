@@ -29,8 +29,8 @@ buildscript {
 /**
  * Properties for versioning
  */
-def libVersionCode = 1
-def libVersion = '1.0.0'
+def libVersionCode = 2
+def libVersion = '1.0.1'
 
 
 android {
